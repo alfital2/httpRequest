@@ -8,44 +8,55 @@ const postList = document.querySelector('ul');
 
 
 function sendHttpRequest(method,url,data){ // data is optional
-    const promise = new Promise((rseolve,reject)=>{
-        const xhr = new XMLHttpRequest();
+//     const promise = new Promise((rseolve,reject)=>{
+//         const xhr = new XMLHttpRequest();
 
-        xhr.open(method,url);
+//         xhr.open(method,url);
 
-        xhr.send(JSON.stringify(data));
+//         xhr.send(JSON.stringify(data));
 
-        xhr.responseType='json';
+//         xhr.responseType='json';
         
-        xhr.onload = function(){
-            if(xhr.status >=200 && xhr.status <300){
-                rseolve(xhr.response);
-            }
-            else{
-                reject(new Error('path could not be reached'))
-            }
-        }
-        xhr.onerror = function(){
-            reject(new Error('failed to send request!'))
-        }
+//         xhr.onload = function(){
+//             if(xhr.status >=200 && xhr.status <300){
+//                 rseolve(xhr.response);
+//             }
+//             else{
+//                 reject(new Error('path could not be reached'))
+//             }
+//         }
+//         xhr.onerror = function(){
+//             reject(new Error('failed to send request!'))
+//         }
    
-    })  
-   return promise;
+//     })  
+//    return promise;
+    const fetchConfiguration = {
+        'method':method,
+        body:JSON.stringify(data)
+    }
+    return fetch(url,fetchConfiguration).then(response => {
+        return response.json()
+    });
 }
 
 
 async function fetchPosts(url){
-    const responseData = await sendHttpRequest(
+    try{
+        const responseData = await sendHttpRequest(
         'GET',
-        'https://jsonplaceholder.typicode.com/posts'
-      );
-      const listOfPosts = responseData;
-    for(const post of listOfPosts){
-        const postEl = document.importNode(postTemplate.content,true);
-        postEl.querySelector('h2').textContent = post.title.toUpperCase();
-        postEl.querySelector('p').textContent = post.body;
-        postEl.querySelector('li').id = post.id;
-        listElement.append(postEl);
+        'https://jsonplaceholder.typicode.com/poss'
+        );
+        const listOfPosts = responseData;
+        for(const post of listOfPosts){
+            const postEl = document.importNode(postTemplate.content,true);
+            postEl.querySelector('h2').textContent = post.title.toUpperCase();
+            postEl.querySelector('p').textContent = post.body;
+            postEl.querySelector('li').id = post.id;
+            listElement.append(postEl);
+        }
+    } catch (error){
+        alert(error.message)
     }
 }
 
@@ -57,7 +68,6 @@ async function createPost(title,content){
         body: content,
         title: title
     }
-
     sendHttpRequest('POST',url, post)
 }
 
