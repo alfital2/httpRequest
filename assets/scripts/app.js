@@ -4,7 +4,7 @@ const form = document.querySelector('#new-post form');
 const fetchButton = document.querySelector('#available-posts button');
 const postList = document.querySelector('ul');
 
-const url='https://jsonplaceholder.typicode.com/posts';
+
 
 
 function sendHttpRequest(method,url,data){ // data is optional
@@ -18,9 +18,18 @@ function sendHttpRequest(method,url,data){ // data is optional
         xhr.responseType='json';
         
         xhr.onload = function(){
-            rseolve(xhr.response);
+            if(xhr.status >=200 && xhr.status <300){
+                rseolve(xhr.response);
             }
-    })
+            else{
+                reject(new Error('path could not be reached'))
+            }
+        }
+        xhr.onerror = function(){
+            reject(new Error('failed to send request!'))
+        }
+   
+    })  
    return promise;
 }
 
@@ -41,6 +50,7 @@ async function fetchPosts(url){
 }
 
 async function createPost(title,content){
+    const url='https://jsonplaceholder.typicode.com/posts';
     const userId = Math.random();
     const post= {
         userId: userId,
