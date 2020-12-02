@@ -24,15 +24,27 @@ function sendHttpRequest(method,url){
 }
 
 
-function fetchPosts(url){
-    sendHttpRequest('GET',url).then(listOfPosts=>{
-        for(const post of listOfPosts){
-            const postEl = document.importNode(postTemplate.content,true);
-            postEl.querySelector('h2').textContent = post.title.toUpperCase();
-            postEl.querySelector('p').textContent = post.body;
-            listElement.append(postEl);
-    }
-})
+async function fetchPosts(url){
+
+    const listOfPosts = await sendHttpRequest('GET',url);
+
+    for(const post of listOfPosts){
+        const postEl = document.importNode(postTemplate.content,true);
+        postEl.querySelector('h2').textContent = post.title.toUpperCase();
+        postEl.querySelector('p').textContent = post.body;
+        listElement.append(postEl);
 }
+}
+
+// function fetchPosts(url){
+//     sendHttpRequest('GET',url).then(listOfPosts=>{
+//         for(const post of listOfPosts){
+//             const postEl = document.importNode(postTemplate.content,true);
+//             postEl.querySelector('h2').textContent = post.title.toUpperCase();
+//             postEl.querySelector('p').textContent = post.body;
+//             listElement.append(postEl);
+//     }
+// })
+// }
 
 fetchPosts(url)
