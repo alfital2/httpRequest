@@ -6,15 +6,11 @@ const postList = document.querySelector('ul');
 
 
 
-const fart = {
-    "adsf": 2
-}
-
 function sendHttpRequest(method, url, data) { // data is optional
 
     const fetchConfiguration = {
         'method': method,
-        body: JSON.stringify(data)
+        body: data
     }
 
     return fetch(url, fetchConfiguration)
@@ -36,7 +32,7 @@ async function fetchPosts(url) {
     try {
         const responseData = await sendHttpRequest(
             'GET',
-            'https://jsonplaceholder.typicode.com/poss'
+            'https://jsonplaceholder.typicode.com/posts'
         );
         const listOfPosts = responseData;
         for (const post of listOfPosts) {
@@ -53,13 +49,15 @@ async function fetchPosts(url) {
 
 async function createPost(title, content) {
     const url = 'https://jsonplaceholder.typicode.com/posts';
+
     const userId = Math.random();
-    const post = {
-        userId: userId,
-        body: content,
-        title: title
-    }
-    sendHttpRequest('POST', url, post)
+
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('body', content);
+    formData.append('title', title);
+
+    sendHttpRequest('POST', url, formData)
 }
 
 
